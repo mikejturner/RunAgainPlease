@@ -1,0 +1,249 @@
+#!/usr/bin/python
+
+import sys
+from subprocess import call
+from string import Template
+import re
+import collections
+import os
+import stat
+import itertools
+
+unique_file_id = 0
+
+def get_commandline_options():
+	if (len(sys.argv) != 2):
+		sys.stderr.write('Incorrect number of arguments\n')
+		sys.stderr.write('Usage:\n')
+		sys.stderr.write('rap <input filename>\n')
+		sys.exit(1)
+	return sys.argv[1]
+
+def prefix():
+	return "@rap"
+
+def var_identifier():
+	return "var"
+
+def script_identifier():
+	return "script"
+
+def comment_identifier():
+	return "#"
+
+def file_value_prefix():
+	return "file:"
+
+def get_variables(instructions, identifier):
+	variables = []
+	for instruction in instructions:
+		tokens = instruction.split()
+		if (tokens[0] == identifier):
+			variables.append(' '.join(tokens[1:]))
+	return variables
+
+def get_script(instructions, identifier):
+	script = []
+	for instruction in instructions:
+		tokens = instruction.split()
+		if (tokens[0] == identifier):
+			script.append(re.sub(identifier+'\s+','',instruction))
+	return script
+
+def get_instructions(lines, prefix):
+	instructions = []
+	body = []
+
+	comment_regex = comment_identifier()+'\s*'+prefix
+
+	for line in lines:
+		tokens = line.split()
+		if (len(tokens) > 0 and tokens[0] == prefix):
+				instructions.append(' '.join(tokens[1:]))
+		elif (re.match(comment_regex, line)): # ignore commented out @rap instructions
+			pass
+		else:
+			body.append(line)
+
+	return instructions, body
+
+def parse_rap_file(filename):
+	with open(filename) as f:
+		lines = f.readlines()
+		
+		instructions, body = get_instructions(lines, prefix())
+		variables = get_variables(instructions, var_identifier())
+		script = get_script(instructions, script_identifier())
+			
+	return variables, script, body
+
+def range_separator():
+	return ":"
+
+def list_separator():
+	return ","
+
+def is_range(string):
+	return string.find(range_separator()) != -1 and string.find(list_separator()) == -1
+
+def is_list(string):
+	return string.find(list_separator()) != -1
+
+def expand_range_string(string):
+	r = []
+	tokens = string.split(range_separator())
+	if (len(tokens) == 3):
+		start = 0
+		step = 0
+		stop = 0
+		# Try and parse range as integers. If fail fall back to floats.
+		try:
+			start = int(tokens[0])
+			step = int(tokens[1])
+			stop = int(tokens[2])
+		except Exception, e:
+			start = float(tokens[0])
+			step = float(tokens[1])
+			stop = float(tokens[2])
+		i = start
+		while (i <= stop):
+			r.append(str(i))
+			i += step
+	else:
+		print "error: malformed range"
+	return r 
+
+def tokenize_list(string):
+	return string.split(list_separator())
+
+def parse_variables(variables):
+	parsed_variables = dict()
+
+	for variable in variables:
+		tokens = variable.split();
+		var_name = tokens[0]
+		value_string = ''.join(tokens[1:])
+		values = []
+		if (is_range(value_string)):
+			values = expand_range_string(value_string)
+			parsed_variables[var_name] = values
+		elif (is_list(value_string)):
+			values = tokenize_list(value_string)
+			parsed_variables[var_name] = values
+		else:
+			print "error: unknown variable: ",variable
+		
+	return parsed_variables
+
+def get_substitutions(parsed_variables):
+	for i in itertools.product(*parsed_variables.values()):
+		yield dict(zip(parsed_variables.keys(),i))
+
+def get_input_extension():
+	return "inp"
+
+def get_unique_input_basename():
+	global unique_file_id
+	result = repr(unique_file_id)
+	unique_file_id += 1
+	return result
+
+def full_sub_key(key):
+	return prefix()+":"+key
+
+def is_file_value(v):
+	return re.match(file_value_prefix(),v)
+
+def filename_from_file_value(file_value):
+	return re.sub(file_value_prefix(),'',file_value)
+
+def substituted_body(body, subs):
+	for line in body:
+		yield_line = True
+		for k,v in subs.items():
+			if (is_file_value(v) and line.find(full_sub_key(k)) != -1):
+				filename = filename_from_file_value(v)
+				with open(filename, 'r') as f:
+					line = f.readline()
+					yield line
+				yield_line = False			
+			else:
+				line = re.sub(full_sub_key(k),v,line)
+		if (yield_line):
+			yield line
+
+def create_input(input_filename, input_body, subs):
+	with open(input_filename,'w') as f:
+		for line in substituted_body(input_body, subs):
+			f.write(line)
+
+def get_script_filename():
+	return "rap.sh"
+
+def make_script_executable(script_filename):
+	st = os.stat(script_filename)
+	os.chmod(script_filename, st.st_mode | stat.S_IEXEC)			
+
+def create_script(script_filename, script, script_vars):
+
+	with open(script_filename, 'w') as f:
+
+		for k,v in script_vars.items():
+			f.write(k+'=\''+v+'\'\n')	
+
+		f.write('\n')
+
+		for line in script:
+			f.write(line+'\n')
+
+def run_script(script_filename):
+	try:
+		retcode = call(script_filename, shell=True)
+
+		if retcode < 0:
+			print >>sys.stderr, "Child was terminated by signal", -retcode
+	except OSError as e:
+		print >>sys.stderr, "Execution failed:", e
+
+
+def script_variables_from_substitutions(subs):
+	script_vars = {}
+	for k,v in subs.items():
+		# Modify all file_values e.g. 'file:my_filename' to strip off the leading 'file:'
+		if (is_file_value(v)):
+			v = filename_from_file_value(v)
+		script_vars[k] = v
+	return script_vars
+
+def run_rap(variables, script, body):
+
+	remove_input_files = True
+	remove_script = True
+
+	for subs in get_substitutions(parse_variables(variables)):
+
+		basename = get_unique_input_basename()
+		extension = get_input_extension()
+		input_filename = basename+"."+extension
+
+		script_vars = script_variables_from_substitutions(subs)
+		script_vars['basename'] = basename
+		script_vars['extension'] = extension
+		script_vars['input'] = input_filename
+
+		script_filename = get_script_filename()
+
+		create_input(input_filename, body, subs)
+		create_script(script_filename, script, script_vars)
+		make_script_executable(script_filename)
+		run_script(script_filename)
+
+		if (remove_input_files):
+			os.remove(input_filename)
+		if (remove_script):
+			os.remove(script_filename)
+
+if __name__ == '__main__':
+	filename = get_commandline_options();
+	variables, script, body = parse_rap_file(filename)
+	run_rap(variables, script, body)
