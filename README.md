@@ -57,9 +57,23 @@ The above example runs a series of calculations using the [Gaussian](http://www.
 
 ## Templates and Substitutions
 
-For each calculation **rap** creates an input file and subsitutes values into it. The values come the from [variables](#variables) and the substitutions depend upon the locations of tokens embedded in the template of the input file.
+All lines in the `.rap` that are *not* instructions to **rap** (nor [comments](Comments)) are assumed to be part of the template for the input file.
 
-Tokens are defined:
+In the [example](#structure-of-a-rap-file) above the template is the following lines:
+
+```
+#T RHF/STO-3G
+
+Title
+
+0 1
+H1
+H2 H1 @rap:length
+```
+
+For each calculation **rap** takes the template and substitutes the values of [variables](#variables) into it to produce a complete input file. The location of the substitutions is controlled by the placement of tokens in the template.
+
+Tokens are defined using [variable](#variables) names:
 
 ```
 @rap:<variable-name>
@@ -68,8 +82,12 @@ Tokens are defined:
 Example:
 
 ```
-@rap:foo
+@rap:length
 ```
+
+The token `@rap:length` will be replaced with the values of the variable `length`. If there is no instruction defining the variable with the name `length` in the `.rap` file then no substitution will take place i.e. the token will be simply ignored. This will probably break your calculation because the program performing the calculation will have no idea what `@rap:length` means.
+
+There is no restriction on where tokens can appear in the template. Also, tokens are replaced whenever they are encountered i.e. the same token can appear more than once and all occurences get replaced.
 
 ### Variables
 
