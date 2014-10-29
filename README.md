@@ -32,7 +32,7 @@ rap gaussian.rap
 
 1. A list of parameters and the values they can take ([variables](#variables))
 2. How to run your calculation (a [script](#script)).
-3. A [template](#templates and substitutions) of the input file for calculation.
+3. A [template](#templates-and-substitutions) of the input file for a calculation.
 
 The three sections are combined and put into a single `.rap` file. The [variables](#variables) and [script](#script) are specified by instructions to **rap** and must be prefixed with `@rap`. 
 
@@ -53,11 +53,11 @@ H1
 H2 H1 @rap:length
 ```
 
-The above example runs a series of calculations using the [Gaussian](http://www.gaussian.com/) computation chemistry package. It defines one variable on the first line, then a four line script to run each calculation. The rest of the lines are the Gaussian input file.
+The above example runs a series of calculations using the [Gaussian](http://www.gaussian.com/) computation chemistry package. It defines one variable on the first line, then a four line script to run each calculation. The rest of the lines are a [template](#templates-and-subsitutions) of the Gaussian input file.
 
-### Templates and Substitutions
+## Templates and Substitutions
 
-For each calculation **rap** creates an input file and subsitutes values into it. The values come the from [variables](#variables) and the location of the substitutions depends on tokens inserted into the input file.
+For each calculation **rap** creates an input file and subsitutes values into it. The values come the from [variables](#variables) and the substitutions depend upon the locations of tokens embedded in the template of the input file.
 
 Tokens are defined:
 
@@ -79,9 +79,9 @@ Variables are defined using the `@rap var` instruction:
 @rap var <variable-name> <variable-values>
 ```
 
-There are two basic kinds of variables which **rap** understands: lists and ranges.
+**rap** understands two basic kinds of variables: [lists](#lists) and [ranges](#ranges).
 
-###Lists
+#### Lists
 
 The values are a comma-separated list:
 
@@ -106,7 +106,7 @@ Example:
 
 Here we are defining a variable called `length` and will be given 5 different values from 0.2 to 0.4 when **rap** is run.
 
-###Ranges
+#### Ranges
 
 These allow a range of numeric values to be specified for a given parameter. The syntax is:
 
@@ -126,7 +126,7 @@ Example:
 @rap var 0.1:1.0:5
 ```
 
-###Substitution from files
+#### Substitution from files
 
 ```
 @rap var <variable-name> file:filename1,file:filename2,file:filename3
@@ -138,7 +138,7 @@ Example:
 @rap var molecule file:methane.xyz,file:water.xyz,file:carbondioxide.xyz
 ```
 
-###Multiple Variables
+#### Multiple Variables
 
 If more than one variable is specified, **rap** will run calculations for all combinations. The combinations are based on the [cartesian product](http://en.wikipedia.org/wiki/Cartesian_product).
 
@@ -153,11 +153,9 @@ Example:
 
 ![Cartesian product example](http://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Cartesian_Product_qtl1.svg/220px-Cartesian_Product_qtl1.svg.png)
 
-:warning: There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish.
+## Script
 
-##Script
-
-###Script Variables
+### Script Variables
 
 Always available `$input`, `$basename` and `$extension`
 
@@ -171,7 +169,7 @@ Example:
 
 is available in the script as `$cutoff`.
 
-### Comments
+## Comments
 
 To disable any of the **rap** instructions, simply prefix the line with the **#** character.
 
@@ -181,25 +179,27 @@ Example:
 #@rap var length 0.2,0.25,0.3,0.35,0.4
 ```
 
-##Gotchas and Advice
+## Gotchas and Advice
 
 :exclamation: Tokens are *not* substituted within included files
 
-###Variable names
+:exclamation: There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish. (See section on [multiple variables](#multiple-variables)).
+
+### Variable names
 
 * Don't begin with `@rap`.
 * Don't call them `$input`, `$basename` or `$extension`.
 
-##Issues
+## Issues
 
 Please feel free to raise issues here on github:
 
 https://github.com/mikejturner/RunAgainPlease/issues
 
-##Maintainers
+## Maintainers
 
 * Mike Turner (https://github.com/mikejturner)
 
-##Licence
+## Licence
 
 [MIT Licence](https://github.com/mikejturner/RunAgainPlease/LICENCE.md)
