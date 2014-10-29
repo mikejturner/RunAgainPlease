@@ -59,7 +59,7 @@ The above example runs a series of calculations using the [Gaussian](http://www.
 
 All lines in the `.rap` that are *not* instructions to **rap** (nor [comments](Comments)) are assumed to be part of the template for the input file.
 
-In the [example](#structure-of-a-rap-file) above the template is the following lines:
+In the example [above](#structure-of-a-rap-file) the template is made up of the following lines:
 
 ```
 #T RHF/STO-3G
