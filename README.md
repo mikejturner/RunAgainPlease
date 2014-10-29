@@ -140,7 +140,7 @@ Example:
 
 #### Multiple Variables
 
-If more than one variable is specified, **rap** will run calculations for all combinations. The combinations are based on the [cartesian product](http://en.wikipedia.org/wiki/Cartesian_product).
+If more than one variable is specified, **rap** will run calculations for all the unique combinations.
 
 Example:
 
