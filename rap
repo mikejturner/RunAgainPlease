@@ -89,26 +89,27 @@ def is_range(string):
 def is_list(string):
 	return string.find(list_separator()) != -1
 
+def is_single_value(string):
+	return len(string.split()) == 1
+
 def expand_range_string(string):
 	r = []
 	tokens = string.split(range_separator())
 	if (len(tokens) == 3):
 		start = 0
 		step = 0
-		stop = 0
+		n_values = 0
 		# Try and parse range as integers. If fail fall back to floats.
 		try:
 			start = int(tokens[0])
 			step = int(tokens[1])
-			stop = int(tokens[2])
+			n_values = int(tokens[2])
 		except Exception, e:
 			start = float(tokens[0])
 			step = float(tokens[1])
-			stop = float(tokens[2])
-		i = start
-		while (i <= stop):
-			r.append(str(i))
-			i += step
+			n_values = int(tokens[2])
+		for i in range(0,n_values):
+			r.append(str(start+i*step))
 	else:
 		print "error: malformed range"
 	return r 
@@ -127,7 +128,7 @@ def parse_variables(variables):
 		if (is_range(value_string)):
 			values = expand_range_string(value_string)
 			parsed_variables[var_name] = values
-		elif (is_list(value_string)):
+		elif (is_list(value_string) or is_single_value(value_string)):
 			values = tokenize_list(value_string)
 			parsed_variables[var_name] = values
 		else:
