@@ -26,15 +26,15 @@ Example:
 rap gaussian.rap
 ```
 
-## Preparing a `.rap` file
+## Structure of a `.rap` file
 
 **rap** needs to know three things in order to do its job:
 
-1. A list of variables (and the values they can take).
-2. How to run your calculation.
-3. The input file for calculation.
+1. A list of parameters and the values they can take ([variables](#variables))
+2. How to run your calculation (a [script](#script)).
+3. A [template](#templates and substitutions) of the input file for calculation.
 
-All three of these go into the `.rap` file.
+The three sections are combined and put into a single `.rap` file. The [variables](#variables) and [script](#script) are specified by instructions to **rap** and must be prefixed with `@rap`. 
 
 Example:
 
@@ -53,18 +53,22 @@ H1
 H2 H1 @rap:length
 ```
 
-The above example is for running a series of calculations using the [Gaussian](http://www.gaussian.com/) computation chemistry package. It defines one variable on the first line, then a four line script to run each calculation. The rest of the lines are the Gaussian input file.
+The above example runs a series of calculations using the [Gaussian](http://www.gaussian.com/) computation chemistry package. It defines one variable on the first line, then a four line script to run each calculation. The rest of the lines are the Gaussian input file.
 
-Instructions are used to define the variables and the script. All instructions to **rap** must be prefixed by `@rap`.
+### Templates and Substitutions
 
-### Comments
+For each calculation **rap** creates an input file and subsitutes values into it. The values come the from [variables](#variables) and the location of the substitutions depends on tokens inserted into the input file.
 
-To disable any of the **rap** instructions, simply prefix the line with the **#** character.
+Tokens are defined:
+
+```
+@rap:<variable-name>
+```
 
 Example:
 
 ```
-#@rap var length 0.2,0.25,0.3,0.35,0.4
+@rap:foo
 ```
 
 ### Variables
@@ -151,22 +155,6 @@ Example:
 
 :warning: There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish.
 
-###Tokens
-
-Tokens are defined:
-
-```
-@rap:<variable-name>
-```
-
-For example,
-
-```
-@rap:foo
-```
-
-:warning: Tokens are *not* substituted within included files
-
 ##Script
 
 ###Script Variables
@@ -183,7 +171,19 @@ Example:
 
 is available in the script as `$cutoff`.
 
-##Advice
+### Comments
+
+To disable any of the **rap** instructions, simply prefix the line with the **#** character.
+
+Example:
+
+```
+#@rap var length 0.2,0.25,0.3,0.35,0.4
+```
+
+##Gotchas and Advice
+
+:exclamation: Tokens are *not* substituted within included files
 
 ###Variable names
 
