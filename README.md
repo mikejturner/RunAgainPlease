@@ -87,7 +87,7 @@ Example:
 
 The token `@rap:length` will be replaced with the values of the variable `length`. If there is no instruction defining the variable with the name `length` in the `.rap` file then no substitution will take place i.e. the token will be simply ignored. This will probably break your calculation because the program performing the calculation will have no idea what `@rap:length` means.
 
-There is no restriction on where tokens can appear in the template. Also, tokens are replaced whenever they are encountered i.e. the same token can appear more than once and all occurences get replaced.
+There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted.
 
 ### Variables
 
@@ -97,7 +97,15 @@ Variables are defined using the `@rap var` instruction:
 @rap var <variable-name> <variable-values>
 ```
 
-**rap** understands two basic kinds of variables: [lists](#lists) and [ranges](#ranges).
+Although variable names can be any combination of letters, numbers and punctuation, the following restrictions apply:
+
+* No spaces.
+* Don't use `@rap` or `@rap:` in the variable name.
+* Don't call your variable `input`, `basename` or `extension`. ([Why?](script-variables))
+
+Variable names can be as long as you like but try to keep them short but still descriptive e.g. `energy-cutoff` or `hydrogen_bond_length`
+
+The variable-values part of the definition depends on what kind of variable you want. **rap** understands two basic kinds of variables: [Lists](#lists) and [Ranges](#ranges).
 
 #### Lists
 
