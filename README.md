@@ -109,12 +109,11 @@ The variable-values part of the definition depends on what kind of variable you 
 
 #### Lists
 
-The values are a comma-separated list:
-
 ```
 @rap var <variable-name> value1,value2,value3,...
 ```
-The values can be can be text or numbers.
+
+Values in a list are comma-separated and can be text, numbers or a mixture.
 
 Example:
 
@@ -122,7 +121,7 @@ Example:
 @rapvar noise moo,oink,woof
 ```
 
-Here we are defining a variable called `noise` and will be given 3 different values: `moo`, `oink` and `woof` when **rap** is run.
+Here we are defining a variable called `noise` and will be given 3 values: `moo`, `oink` and `woof` when **rap** is run.
 
 Example:
 
@@ -130,26 +129,38 @@ Example:
 @rap var x 0.2,0.25,0.3,0.35,0.4
 ```
 
-Here we are defining a variable called `length` and will be given 5 different values from 0.2 to 0.4 when **rap** is run.
+Here we are defining a variable called `length` and will be given 5 values from 0.2 up to 0.4 when **rap** is run.
 
 #### Ranges
 
-These allow a range of numeric values to be specified for a given parameter. The syntax is:
+This variable type provides a way to specify ranges of numbers. They provide a convenient alternative to having to write out all the values when using lists. 
 
 ```
-@rap var <variable-name> <start>:<step>:<number of values>
+@rap var <variable-name> <start-value>:<step-size>:<number-of-steps>
 ```
 
-Example:
-
-```
-@rap var 1:2:5
-```
+Ranges can be use integers e.g. 1,2,3,... or real numbers e.g. 10.4,10.5,10.6,... as shown below.
 
 Example:
 
 ```
-@rap var 0.1:1.0:5
+@rap var x 1:2:5
+```
+
+Creates a variable `x` with the values `1`, `3`, `5`, `7` and `9`.
+
+Example:
+
+```
+@rap var y 0.0:1.1:5
+```
+
+Creates a variable `y` with the values `0.0`, `1.1`, `2.2`, `3.3`, `4.4` and `5.5`.
+
+If you know you want the range to begin at `start` and stop at `end` with `number-of-steps` steps, then the `step-size` can be calculated with:
+
+```
+step-size = (end - start) / (number-of-steps - 1)
 ```
 
 #### Substitution from files
