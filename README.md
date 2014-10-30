@@ -85,7 +85,9 @@ Example:
 @rap:length
 ```
 
-The token `@rap:length` will be replaced with the values of the variable `length`. There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted.
+The token `@rap:length` will be replaced with the values of the variable `length`.
+
+There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted.
 
 ### Variables
 
@@ -99,7 +101,7 @@ Although variable names can be any combination of letters, numbers and punctuati
 
 * No spaces.
 * Don't use `@rap` or `@rap:` in the variable name.
-* Don't call your variable `input`, `basename` or `extension`. ([Why?](#script-variables))
+* Don't call your variable `input`, `basename` or `extension`. ([Why?](#script-parameters))
 
 Variable names can be as long as you like but try to keep them short but still descriptive e.g. `energy-cutoff` or `hydrogen_bond_length`
 
@@ -218,9 +220,11 @@ Here are some steps that you make want your script to perform:
 * Clean-up files that were generated in the course of running the calculation.
 * Archiving the results of calculations.
 
-### Script Variables
+### Script Parameters
 
-**rap** inserts a number of useful variables into the script. These script variables fall into two types...
+**rap** automatically inserts a number of parameters into the script file that may be helpful when running your calculations. There are two types of script parameters: [variable-based](#variable-based-script-parameters) and [filename-based](#filename-based-script-parameters).
+
+#### Variable-based Script Parameters
 
 All the variables you created with `@rap var` are available in the script.
 
@@ -228,15 +232,28 @@ Example:
 
 ```
 @rap var cutoff 1,2,3
+@rap var element carbon,oxygen
 ```
 
-is available in the script as `$cutoff`.
+The variables `cutoff` and `element` can be accessed in the script using the parameters `$cutoff` and `$element` respectively.
+
+#### Filename-based Script Parameters
+
+Based on the filename **rap** assigns to the input for the calculation.
 
 When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and saves the input into a file. What is the filename of the input? **rap** creates a unique filename for each calculation. 
 
 Always available `$input`, `$basename` and `$extension`
 
+Example:
 
+If the input filename is `5.inp` then,
+
+```
+$input = 5.inp
+$basename = 5
+$extension = inp
+```
 
 ### Example Script Commands
 
