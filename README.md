@@ -239,11 +239,7 @@ The variables `cutoff` and `element` can be accessed in the script using the par
 
 #### Filename-based Script Parameters
 
-Based on the filename **rap** assigns to the input for the calculation.
-
-When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and saves the input into a file. What is the filename of the input? **rap** creates a unique filename for each calculation. 
-
-Always available `$rap-filename`, `$rap-basename` and `$rap-extension`
+When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and stores the result in a file. The name of this file is assigned by **rap**  and is unique for each calculation. Information about the assigned filename is made available in three script parameters: `$rap-filename`, `$rap-basename` and `$rap-extension`.
 
 Example:
 
@@ -254,6 +250,12 @@ $rap-filename = 5.inp
 $rap-basename = 5
 $rap-extension = inp
 ```
+
+Here are a few of situations when these parameters come in handy:
+
+* When you want to create an output filename based on the input filename.
+* You need to rename the input filename to meet the criteria of the program running in the calculation.
+* You want to archive the input files.
 
 ### Example Script Commands
 
