@@ -228,9 +228,9 @@ def run_rap(variables, script, body):
 		input_filename = basename+"."+extension
 
 		script_vars = script_variables_from_substitutions(subs)
-		script_vars['basename'] = basename
-		script_vars['extension'] = extension
-		script_vars['input'] = input_filename
+		script_vars['rap-basename'] = basename
+		script_vars['rap-extension'] = extension
+		script_vars['rap-filename'] = input_filename
 
 		script_filename = get_script_filename()
 
