@@ -101,7 +101,7 @@ Although variable names can be any combination of letters, numbers and punctuati
 
 * No spaces.
 * Don't use `@rap` or `@rap:` in the variable name.
-* Don't call your variable `input`, `basename` or `extension`. ([Why?](script-variables))
+* Don't call your variable `input`, `basename` or `extension`. ([Why?](#script-variables))
 
 Variable names can be as long as you like but try to keep them short but still descriptive e.g. `energy-cutoff` or `hydrogen_bond_length`
 
@@ -165,13 +165,13 @@ step-size = (end - start) / (number-of-steps - 1)
 
 #### File Substitution
 
-A special variant of the list allows you to substitute the contents of other files into the [template](templates-and-substitutions).
+A special variant of the list allows you to substitute the contents of other files into the [template](#templates-and-substitutions).
 
 ```
 @rap var <variable-name> file:my-file-1,file:my-file-2,file:my-file-3,...
 ```
 
-This is the same as an standard [list variable](lists) except each file is prefixed by `file:`. The prefix is necessary to let **rap** know you want file substitution and not just text substitution. Files can be specified in the usual ways:
+This is the same as an standard [list variable](#lists) except each file is prefixed by `file:`. The prefix is necessary to let **rap** know you want file substitution and not just text substitution. Files can be specified in the usual ways:
 
 * Absolute path e.g. `/home/mike/data/methane.xyz`
 * Relative path e.g. `data/methane.xyz`
@@ -202,7 +202,23 @@ Example:
 
 ## Script
 
+The script tells **rap** how to run the calculation and is generated from one or more script instructions of the form:
+
+```
+@rap script <bash-command>
+```
+
+**rap** automatically turns the script instructions into a [bash](http://en.wikipedia.org/wiki/Bash_(Unix_shell)) script.
+
+There are many tutorials on the web for learning [bash scripting](http://mywiki.wooledge.org/BashGuide).
+
+The most important command is the one that runs the calculation. It depends on what program you are using for your calculations.
+
 ### Script Variables
+
+In order to make writing scripts easier **rap** adds a number of variables into the script. These script variables fall into two types...
+
+When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and saves the input into a file. What is the filename of the input? **rap** creates a unique filename for each calculation. 
 
 Always available `$input`, `$basename` and `$extension`
 
@@ -216,15 +232,32 @@ Example:
 
 is available in the script as `$cutoff`.
 
-## Comments
+### Example Script Commands
 
-To disable any of the **rap** instructions, simply prefix the line with the **#** character.
-
-Example:
+#### Running the program
 
 ```
-#@rap var length 0.2,0.25,0.3,0.35,0.4
+@rap script g09 < $input > $basename.out
 ```
+
+#### Extracting interesting output
+
+```
+@rap script energy=`grep "SCF Done:" $basename.out| token 5`
+```
+
+#### Printing out the interesting output
+
+```
+@rap script echo $length,$energy
+```
+
+#### Tidying up
+
+```
+@rap script rm $basename.out
+```
+
 
 ## Gotchas and Advice
 
@@ -232,10 +265,20 @@ Example:
 
 :exclamation: There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish. (See section on [multiple variables](#multiple-variables)).
 
-### Variable names
+### Naming Variables
 
 * Don't begin with `@rap`.
 * Don't call them `$input`, `$basename` or `$extension`.
+
+### Comments
+
+To disable any **rap** instruction, simply add **#** at the beginning of the line.
+
+Example:
+
+```
+#@rap var length 0.2,0.25,0.3,0.35,0.4
+```
 
 ## Issues
 
