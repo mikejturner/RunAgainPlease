@@ -237,6 +237,8 @@ Example:
 
 The variables `cutoff` and `element` can be accessed in the script using the parameters `$cutoff` and `$element` respectively.
 
+This is useful if you want to save the variables used in a calculation along will some output from the calculation ([Example](#printing-out-the-interesting-output)).
+
 #### Filename-based Script Parameters
 
 When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and stores the result in a file. The name of this file is assigned by **rap**  and is unique for each calculation. Information about the assigned filename is made available in three script parameters: `$rap-filename`, `$rap-basename` and `$rap-extension`.
@@ -259,6 +261,8 @@ Here are a few of situations when these parameters come in handy:
 
 ### Example Script Commands
 
+To provide some inspiration for writing you own scripts, here are explanations of the script instructions used in the [example](#structure-of-a-rap-file) introduced earlier.
+
 #### Running the program
 
 ```
@@ -276,6 +280,9 @@ Here are a few of situations when these parameters come in handy:
 ```
 @rap script echo $length,$energy
 ```
+
+[.csv file](http://en.wikipedia.org/wiki/Comma-separated_values) for reading into a spreadsheet.
+
 
 #### Tidying up
 
@@ -306,6 +313,8 @@ Example:
 ```
 #@rap var length 0.2,0.25,0.3,0.35,0.4
 ```
+
+**rap** will no longer use the variable called `length`.
 
 ## Issues
 
