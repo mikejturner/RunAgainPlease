@@ -163,17 +163,27 @@ If you know you want the range to begin at `start` and stop at `end` with `numbe
 step-size = (end - start) / (number-of-steps - 1)
 ```
 
-#### Substitution from files
+#### File Substitution
+
+A special variant of the list allows you to substitute the contents of other files into the [template](templates-and-substitutions).
 
 ```
-@rap var <variable-name> file:filename1,file:filename2,file:filename3
+@rap var <variable-name> file:my-file-1,file:my-file-2,file:my-file-3,...
 ```
+
+This is the same as an standard [list variable](lists) except each file is prefixed by `file:`. The prefix is necessary to let **rap** know you want file substitution and not just text substitution. Files can be specified in the usual ways:
+
+* Absolute path e.g. `/home/mike/data/methane.xyz`
+* Relative path e.g. `data/methane.xyz`
+* Or simply `methane.xyz` if this file is in the same directory that you will run **rap** in.
 
 Example:
 
 ```
-@rap var molecule file:methane.xyz,file:water.xyz,file:carbondioxide.xyz
+@rap var molecule file:data/methane.xyz,file:data/water.xyz,file:data/carbondioxide.xyz
 ```
+
+This substitutes the contents of the three files `data/methane.xyz`, `data/water.xyz` and `data/carbondioxide.xyz` in place of the variable `molecule`.
 
 #### Multiple Variables
 
