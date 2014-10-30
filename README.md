@@ -40,10 +40,10 @@ Example:
 
 ```
 @rap var length 0.2,0.25,0.3,0.35,0.4
-@rap script g09 < $input > $basename.out
-@rap script energy=`grep "SCF Done:" $basename.out| token 5`
+@rap script g09 < $rap-filename > $rap-basename.out
+@rap script energy=`grep "SCF Done:" $rap-basename.out| token 5`
 @rap script echo $length,$energy
-@rap script rm $basename.out
+@rap script rm $rap-basename.out
 #T RHF/STO-3G
 
 Title
@@ -243,16 +243,16 @@ Based on the filename **rap** assigns to the input for the calculation.
 
 When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and saves the input into a file. What is the filename of the input? **rap** creates a unique filename for each calculation. 
 
-Always available `$input`, `$basename` and `$extension`
+Always available `$rap-filename`, `$rap-basename` and `$rap-extension`
 
 Example:
 
 If the input filename is `5.inp` then,
 
 ```
-$input = 5.inp
-$basename = 5
-$extension = inp
+$rap-filename = 5.inp
+$rap-basename = 5
+$rap-extension = inp
 ```
 
 ### Example Script Commands
@@ -260,13 +260,13 @@ $extension = inp
 #### Running the program
 
 ```
-@rap script g09 < $input > $basename.out
+@rap script g09 < $rap-filename > $rap-basename.out
 ```
 
 #### Extracting interesting output
 
 ```
-@rap script energy=`grep "SCF Done:" $basename.out| token 5`
+@rap script energy=`grep "SCF Done:" $rap-basename.out| token 5`
 ```
 
 #### Printing out the interesting output
@@ -278,7 +278,7 @@ $extension = inp
 #### Tidying up
 
 ```
-@rap script rm $basename.out
+@rap script rm $rap-basename.out
 ```
 
 ## Gotchas and Advice
@@ -293,7 +293,7 @@ $extension = inp
 
 * Don't include spaces.
 * Don't begin with `@rap` or `@rap:`.
-* Don't use the names `$input`, `$basename` or `$extension`.
+* Don't use the names `$rap-input`, `$rap-basename` or `$rap-extension`.
 
 ### Comments
 
