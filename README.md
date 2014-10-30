@@ -85,9 +85,7 @@ Example:
 @rap:length
 ```
 
-The token `@rap:length` will be replaced with the values of the variable `length`. If there is no instruction defining the variable with the name `length` in the `.rap` file then no substitution will take place i.e. the token will be simply ignored. This will probably break your calculation because the program performing the calculation will have no idea what `@rap:length` means.
-
-There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted.
+The token `@rap:length` will be replaced with the values of the variable `length`. There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted.
 
 ### Variables
 
@@ -266,17 +264,19 @@ Always available `$input`, `$basename` and `$extension`
 @rap script rm $basename.out
 ```
 
-
 ## Gotchas and Advice
 
-:exclamation: Tokens are *not* substituted within included files
+### Substitutions
 
-:exclamation: There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish. (See section on [multiple variables](#multiple-variables)).
+* If there is no instruction defining the variable with the name `length` in the `.rap` file then no substitution will take place i.e. the token will be simply ignored. This will probably break your calculation because the program performing the calculation will have no idea what `@rap:length` means.
+* Tokens are *not* substituted within included files
+* There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish. (See section on [multiple variables](#multiple-variables)).
 
 ### Naming Variables
 
-* Don't begin with `@rap`.
-* Don't call them `$input`, `$basename` or `$extension`.
+* Don't include spaces.
+* Don't begin with `@rap` or `@rap:`.
+* Don't use the names `$input`, `$basename` or `$extension`.
 
 ### Comments
 
