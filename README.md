@@ -202,27 +202,29 @@ Example:
 
 ## Script
 
-The script tells **rap** how to run the calculation and is generated from one or more script instructions of the form:
+The script tells **rap** what steps need to be taken to perform a single calculation. Each step has a corresponding script instruction:
 
 ```
 @rap script <bash-command>
 ```
 
-**rap** automatically turns the script instructions into a [bash](http://en.wikipedia.org/wiki/Bash_(Unix_shell)) script.
+The `bash-command` describes what happens in the step and is written in the [bash scripting language](http://mywiki.wooledge.org/BashGuide). It is beyond the scope of this document to explain bash scripting but some useful examples are given [below](#example-script-commands).
 
-There are many tutorials on the web for learning [bash scripting](http://mywiki.wooledge.org/BashGuide).
+Behind the scenes **rap** combines all the script instructions together and creates a bash script that is used to run each calculation.
 
-The most important command is the one that runs the calculation. It depends on what program you are using for your calculations.
+Here are some steps that you make want your script to perform:
+
+* Setting up the conditions to successfully run the calculation (e.g. copy files, set environment variables etc.).
+* Run the program that does the calculation (obviously).
+* Extract useful numbers from the output of the calculation.
+* Clean-up files that were generated in the course of running the calculation.
+* Archiving the results of calculations.
 
 ### Script Variables
 
-In order to make writing scripts easier **rap** adds a number of variables into the script. These script variables fall into two types...
+**rap** inserts a number of useful variables into the script. These script variables fall into two types...
 
-When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and saves the input into a file. What is the filename of the input? **rap** creates a unique filename for each calculation. 
-
-Always available `$input`, `$basename` and `$extension`
-
-All parameters are available in the script.
+All the variables you created with `@rap var` are available in the script.
 
 Example:
 
@@ -231,6 +233,12 @@ Example:
 ```
 
 is available in the script as `$cutoff`.
+
+When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and saves the input into a file. What is the filename of the input? **rap** creates a unique filename for each calculation. 
+
+Always available `$input`, `$basename` and `$extension`
+
+
 
 ### Example Script Commands
 
