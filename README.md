@@ -118,7 +118,7 @@ Values in a list are comma-separated and can be text, numbers or a mixture.
 Example:
 
 ```
-@rapvar noise moo,oink,woof
+@rap var noise moo,oink,woof
 ```
 
 Here we are defining a variable called `noise` and will be given 3 values: `moo`, `oink` and `woof` when **rap** is run.
