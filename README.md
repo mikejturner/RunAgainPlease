@@ -87,7 +87,7 @@ Tokens are defined using [variable](#variables) names:
 
 The token `@rap:length` will be replaced with the values of the variable `length`.
 
-There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted.
+There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted. An alternative use of variables is discussed [here](#using-variables-in-command-line-arguments).
 
 ### Variables
 
@@ -237,7 +237,10 @@ All the variables you created with `@rap var` are available in the script.
 
 The variables `cutoff` and `element` can be accessed in the script using the parameters `$cutoff` and `$element` respectively.
 
-This is useful if you want to save the variables used in a calculation along will some output from the calculation ([Example](#printing-out-the-interesting-output)).
+Having the variables available in the script is particular useful in the following situations:
+
+* Using variables as [command line arguments](#using-variables-in-command-line-arguments)
+* Storing the results of the calculation with the variables that produced it ([example](#printing-out-the-interesting-output)).
 
 #### Filename-based Script Parameters
 
@@ -259,6 +262,16 @@ Here are a few of situations when these parameters come in handy:
 * You need to rename the input filename to meet the criteria of the program running in the calculation.
 * You want to archive the input files.
 
+### Using Variables in Command-line Arguments
+
+As an alternative to [substituting variables](#templates-and-substitutions) in to the template, the variables can be used as command-line arguments.
+
+**Example:**
+
+```
+@rap script something -n $other
+```
+
 ### Example Script Commands
 
 To provide some inspiration for writing you own scripts, here are explanations of the script instructions used in the [example](#structure-of-a-rap-file) introduced earlier.
@@ -269,7 +282,7 @@ To provide some inspiration for writing you own scripts, here are explanations o
 @rap script g09 < $rap_filename > $rap_basename.out
 ```
 
-This script instruction runs our calculation using `g09`. The input for the calculation comes from the file given by `$rap_filename` which we know is a [shell parameter](#filename-based-script-parameters) containing the filename in which **rap** stores the inputs. We construct a file based on `$rap_basename` with the extension `.out` and store the output of the calculation in that file.
+This script instruction runs our calculation using `g09`. The input for the calculation comes from the file given by `$rap_filename` which we know is a [shell parameter](#filename-based-script-parameters) containing the filename in which **rap** stores the input. We construct a filename based on `$rap_basename` with the extension `.out` and store the output of the calculation in that file.
 
 **Example:**
 
@@ -289,8 +302,7 @@ Later in the script when we want to access the energy parameter we must remember
 @rap script echo $length,$energy
 ```
 
-Printing out the interesting output
-[.csv file](http://en.wikipedia.org/wiki/Comma-separated_values) for reading into a spreadsheet.
+Here we are using the `echo` command to print out a comma-separated list of values that interest us (in this case the `length` and `energy` variables). This can be saved into a [.csv file](http://en.wikipedia.org/wiki/Comma-separated_values) and conveniently read into a spreadsheet program for graphing.
 
 **Example:**
 
@@ -298,7 +310,7 @@ Printing out the interesting output
 @rap script rm $rap_basename.out
 ```
 
-Tidying up
+Here we are using the `rm` command to remove the output files and keep things tidy.
 
 ## Gotchas and Advice
 
