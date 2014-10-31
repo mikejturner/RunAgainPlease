@@ -263,32 +263,42 @@ Here are a few of situations when these parameters come in handy:
 
 To provide some inspiration for writing you own scripts, here are explanations of the script instructions used in the [example](#structure-of-a-rap-file) introduced earlier.
 
-#### Running the program
+Example:
 
 ```
 @rap script g09 < $rap_filename > $rap_basename.out
 ```
 
-#### Extracting interesting output
+This script instruction runs our calculation using `g09`. The input for the calculation comes from the file given by `$rap_filename` which we know is a [shell parameter](#filename-based-script-parameters) containing the filename in which **rap** stores the inputs. We construct a file based on `$rap_basename` with the extension `.out` and store the output of the calculation in that file.
+
+Example:
 
 ```
 @rap script energy=`grep "SCF Done:" $rap_basename.out| token 5`
 ```
 
-#### Printing out the interesting output
+Here we are extracting a value from the file `$rap_basename.out` and storing it in a new shell parameter called `energy`. This is achieved by finding (using `grep`) the line in the output which contains the text `SCF Done:`.
+
+We only want the number that represents the energy so we use `token` to select the 5th "word" on the line.
+
+Later in the script when we want to access the energy parameter we must remember to refer to it as `$energy`.
+
+Example:
 
 ```
 @rap script echo $length,$energy
 ```
 
+Printing out the interesting output
 [.csv file](http://en.wikipedia.org/wiki/Comma-separated_values) for reading into a spreadsheet.
 
-
-#### Tidying up
+Example:
 
 ```
 @rap script rm $rap_basename.out
 ```
+
+Tidying up
 
 ## Gotchas and Advice
 
