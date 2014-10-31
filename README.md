@@ -40,10 +40,10 @@ Example:
 
 ```
 @rap var length 0.2,0.25,0.3,0.35,0.4
-@rap script g09 < $rap-filename > $rap-basename.out
-@rap script energy=`grep "SCF Done:" $rap-basename.out| token 5`
+@rap script g09 < $rap_filename > $rap_basename.out
+@rap script energy=`grep "SCF Done:" $rap_basename.out| token 5`
 @rap script echo $length,$energy
-@rap script rm $rap-basename.out
+@rap script rm $rap_basename.out
 #T RHF/STO-3G
 
 Title
@@ -241,16 +241,16 @@ This is useful if you want to save the variables used in a calculation along wil
 
 #### Filename-based Script Parameters
 
-When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and stores the result in a file. The name of this file is assigned by **rap**  and is unique for each calculation. Information about the assigned filename is made available in three script parameters: `$rap-filename`, `$rap-basename` and `$rap-extension`.
+When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and stores the result in a file. The name of this file is assigned by **rap**  and is unique for each calculation. Information about the assigned filename is made available in three script parameters: `$rap_filename`, `$rap_basename` and `$rap_extension`.
 
 Example:
 
 If the input filename is `5.inp` then,
 
 ```
-$rap-filename = 5.inp
-$rap-basename = 5
-$rap-extension = inp
+$rap_filename = 5.inp
+$rap_basename = 5
+$rap_extension = inp
 ```
 
 Here are a few of situations when these parameters come in handy:
@@ -266,13 +266,13 @@ To provide some inspiration for writing you own scripts, here are explanations o
 #### Running the program
 
 ```
-@rap script g09 < $rap-filename > $rap-basename.out
+@rap script g09 < $rap_filename > $rap_basename.out
 ```
 
 #### Extracting interesting output
 
 ```
-@rap script energy=`grep "SCF Done:" $rap-basename.out| token 5`
+@rap script energy=`grep "SCF Done:" $rap_basename.out| token 5`
 ```
 
 #### Printing out the interesting output
@@ -287,7 +287,7 @@ To provide some inspiration for writing you own scripts, here are explanations o
 #### Tidying up
 
 ```
-@rap script rm $rap-basename.out
+@rap script rm $rap_basename.out
 ```
 
 ## Gotchas and Advice
@@ -302,7 +302,7 @@ To provide some inspiration for writing you own scripts, here are explanations o
 
 * Don't include spaces.
 * Don't begin with `@rap` or `@rap:`.
-* Don't use the names `$rap-input`, `$rap-basename` or `$rap-extension`.
+* Don't use the names `$rap_input`, `$rap_basename` or `$rap_extension`.
 
 ### Comments
 
