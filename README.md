@@ -20,7 +20,7 @@ chmod u+x rap
 rap <filename>
 ```
 
-Example:
+**Example:**
 
 ```Console
 rap gaussian.rap
@@ -36,7 +36,7 @@ rap gaussian.rap
 
 The three sections are combined and put into a single `.rap` file. The [variables](#variables) and [script](#script) are specified by instructions to **rap** and must be prefixed with `@rap`. 
 
-Example:
+**Example:**
 
 ```
 @rap var length 0.2,0.25,0.3,0.35,0.4
@@ -79,7 +79,7 @@ Tokens are defined using [variable](#variables) names:
 @rap:<variable-name>
 ```
 
-Example:
+**Example:**
 
 ```
 @rap:length
@@ -115,7 +115,7 @@ The variable-values part of the definition depends on what kind of variable you 
 
 Values in a list are comma-separated and can be text, numbers or a mixture.
 
-Example:
+**Example:**
 
 ```
 @rap var noise moo,oink,woof
@@ -123,7 +123,7 @@ Example:
 
 Here we are defining a variable called `noise` and will be given 3 values: `moo`, `oink` and `woof` when **rap** is run.
 
-Example:
+**Example:**
 
 ```
 @rap var x 0.2,0.25,0.3,0.35,0.4
@@ -141,7 +141,7 @@ This variable type provides a way to specify ranges of numbers. They provide a c
 
 Ranges can be use integers e.g. 1,2,3,... or real numbers e.g. 10.4,10.5,10.6,... as shown below.
 
-Example:
+**Example:**
 
 ```
 @rap var x 1:2:5
@@ -149,7 +149,7 @@ Example:
 
 Creates a variable `x` with the values `1`, `3`, `5`, `7` and `9`.
 
-Example:
+**Example:**
 
 ```
 @rap var y 0.0:1.1:5
@@ -177,7 +177,7 @@ This is the same as an standard [list variable](#lists) except each file is pref
 * Relative path e.g. `data/methane.xyz`
 * Or simply `methane.xyz` if this file is in the same directory that you will run **rap** in.
 
-Example:
+**Example:**
 
 ```
 @rap var molecule file:data/methane.xyz,file:data/water.xyz,file:data/carbondioxide.xyz
@@ -189,7 +189,7 @@ This substitutes the contents of the three files `data/methane.xyz`, `data/water
 
 If more than one variable is specified, **rap** will run calculations for all the unique combinations.
 
-Example:
+**Example:**
 
 ```
 @rap  var  A  x,y,z
@@ -228,7 +228,7 @@ Here are some steps that you make want your script to perform:
 
 All the variables you created with `@rap var` are available in the script.
 
-Example:
+**Example:**
 
 ```
 @rap var cutoff 1,2,3
@@ -243,7 +243,7 @@ This is useful if you want to save the variables used in a calculation along wil
 
 When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and stores the result in a file. The name of this file is assigned by **rap**  and is unique for each calculation. Information about the assigned filename is made available in three script parameters: `$rap_filename`, `$rap_basename` and `$rap_extension`.
 
-Example:
+**Example:**
 
 If the input filename is `5.inp` then,
 
@@ -263,7 +263,7 @@ Here are a few of situations when these parameters come in handy:
 
 To provide some inspiration for writing you own scripts, here are explanations of the script instructions used in the [example](#structure-of-a-rap-file) introduced earlier.
 
-Example:
+**Example:**
 
 ```
 @rap script g09 < $rap_filename > $rap_basename.out
@@ -271,7 +271,7 @@ Example:
 
 This script instruction runs our calculation using `g09`. The input for the calculation comes from the file given by `$rap_filename` which we know is a [shell parameter](#filename-based-script-parameters) containing the filename in which **rap** stores the inputs. We construct a file based on `$rap_basename` with the extension `.out` and store the output of the calculation in that file.
 
-Example:
+**Example:**
 
 ```
 @rap script energy=`grep "SCF Done:" $rap_basename.out| token 5`
@@ -283,7 +283,7 @@ We only want the number that represents the energy so we use `token` to select t
 
 Later in the script when we want to access the energy parameter we must remember to refer to it as `$energy`.
 
-Example:
+**Example:**
 
 ```
 @rap script echo $length,$energy
@@ -292,7 +292,7 @@ Example:
 Printing out the interesting output
 [.csv file](http://en.wikipedia.org/wiki/Comma-separated_values) for reading into a spreadsheet.
 
-Example:
+**Example:**
 
 ```
 @rap script rm $rap_basename.out
@@ -317,7 +317,7 @@ Tidying up
 
 To disable any **rap** instruction, simply add **#** at the beginning of the line.
 
-Example:
+**Example:**
 
 ```
 #@rap var length 0.2,0.25,0.3,0.35,0.4
