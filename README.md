@@ -294,7 +294,6 @@ To provide some inspiration for writing you own scripts, here are explanations o
 
 ### Substitutions
 
-* If there is no instruction defining the variable with the name `length` in the `.rap` file then no substitution will take place i.e. the token will be simply ignored. This will probably break your calculation because the program performing the calculation will have no idea what `@rap:length` means.
 * Tokens are *not* substituted within included files
 * There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish. (See section on [multiple variables](#multiple-variables)).
 
