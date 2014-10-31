@@ -2,7 +2,6 @@
 
 import sys
 from subprocess import call
-from string import Template
 import re
 import collections
 import os
@@ -132,7 +131,8 @@ def parse_variables(variables):
 			values = tokenize_list(value_string)
 			parsed_variables[var_name] = values
 		else:
-			print "error: unknown variable: ",variable
+			print >>sys.stderr, "Execution failed: ",variable," is not a list or a list."
+			sys.exit(1)
 		
 	return parsed_variables
 
@@ -149,8 +149,17 @@ def get_unique_input_basename():
 	unique_file_id += 1
 	return result
 
-def full_sub_key(key):
-	return prefix()+":"+key
+def token_separator():
+	return ':'
+
+def token_prefix():
+	return prefix()+token_separator()
+
+def sub_token(var):
+	return token_prefix()+var
+
+def is_sub_token(t):
+	return re.match(token_prefix(),t)
 
 def is_file_value(v):
 	return re.match(file_value_prefix(),v)
@@ -162,21 +171,37 @@ def substituted_body(body, subs):
 	for line in body:
 		yield_line = True
 		for k,v in subs.items():
-			if (is_file_value(v) and line.find(full_sub_key(k)) != -1):
+			if (is_file_value(v) and line.find(sub_token(k)) != -1):
 				filename = filename_from_file_value(v)
 				with open(filename, 'r') as f:
 					line = f.readline()
 					yield line
 				yield_line = False			
 			else:
-				line = re.sub(full_sub_key(k),v,line)
+				line = re.sub(sub_token(k),v,line)
 		if (yield_line):
 			yield line
 
+def is_unsubbed_line(line):
+	for x in line.split():
+		if (is_sub_token(x)):
+			return True
+	return False
+
 def create_input(input_filename, input_body, subs):
+	unsubbed_lines = []
+
 	with open(input_filename,'w') as f:
 		for line in substituted_body(input_body, subs):
+			if (is_unsubbed_line(line)):
+				unsubbed_lines.append(line)
 			f.write(line)
+
+	if (len(unsubbed_lines) > 0):
+		print >>sys.stderr, "Execution failed"
+		for line in unsubbed_lines:
+			print >>sys.stderr, "No matching variable(s) found for token(s) on line: \""+line.rstrip()+"\""
+		sys.exit(1) 
 
 def get_script_filename():
 	return "rap.sh"
@@ -218,8 +243,8 @@ def script_variables_from_substitutions(subs):
 
 def run_rap(variables, script, body):
 
-	remove_input_files = True
-	remove_script = True
+	remove_input_files = False
+	remove_script = False
 
 	for subs in get_substitutions(parse_variables(variables)):
 
@@ -228,9 +253,9 @@ def run_rap(variables, script, body):
 		input_filename = basename+"."+extension
 
 		script_vars = script_variables_from_substitutions(subs)
-		script_vars['rap-basename'] = basename
-		script_vars['rap-extension'] = extension
-		script_vars['rap-filename'] = input_filename
+		script_vars['rap_basename'] = basename
+		script_vars['rap_extension'] = extension
+		script_vars['rap_filename'] = input_filename
 
 		script_filename = get_script_filename()
 
