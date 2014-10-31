@@ -14,7 +14,7 @@ chmod u+x rap
 ```
 ##Usage
 
-**rap** is run from the commandline and accepts one argument.
+**rap** is run from the commandline and accepts one argument, a filename.
 
 ```Console
 rap <filename>
@@ -25,6 +25,8 @@ rap <filename>
 ```Console
 rap gaussian.rap
 ```
+
+The filename typically has a `.rap` extension.
 
 ## Structure of a `.rap` file
 
@@ -87,7 +89,7 @@ Tokens are defined using [variable](#variables) names:
 
 The token `@rap:length` will be replaced with the values of the variable `length`.
 
-There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted. An alternative use of variables is discussed [here](#using-variables-in-command-line-arguments).
+There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted. An alternative use of variables is discussed [here](#using-variables-as-command-line-arguments).
 
 ### Variables
 
@@ -239,7 +241,7 @@ The variables `cutoff` and `element` can be accessed in the script using the par
 
 Having the variables available in the script is particular useful in the following situations:
 
-* Using variables as [command line arguments](#using-variables-in-command-line-arguments)
+* Using variables as [command line arguments](#using-variables-as-command-line-arguments)
 * Storing the results of the calculation with the variables that produced it ([example](#printing-out-the-interesting-output)).
 
 #### Filename-based Script Parameters
@@ -262,15 +264,17 @@ Here are a few of situations when these parameters come in handy:
 * You need to rename the input filename to meet the criteria of the program running in the calculation.
 * You want to archive the input files.
 
-### Using Variables in Command-line Arguments
+### Using Variables as Command-line Arguments
 
-As an alternative to [substituting variables](#templates-and-substitutions) in to the template, the variables can be used as command-line arguments.
+As an alternative to [substituting variables](#templates-and-substitutions) into a template, the variables can also be used as command-line arguments.
 
 **Example:**
 
 ```
-@rap script something -n $other
+@rap script mkdir $molecule
 ```
+
+This creates a new folder whose name is the value stored in the variable `molecule`.
 
 ### Example Script Commands
 
@@ -294,7 +298,7 @@ Here we are extracting a value from the file `$rap_basename.out` and storing it 
 
 We only want the number that represents the energy so we use `token` to select the 5th "word" on the line.
 
-Later in the script when we want to access the energy parameter we must remember to refer to it as `$energy`.
+Later on when we want to access the energy parameter we must remember to refer to it as `$energy`.
 
 **Example:**
 
@@ -349,4 +353,4 @@ https://github.com/mikejturner/RunAgainPlease/issues
 
 ## Licence
 
-[MIT Licence](https://github.com/mikejturner/RunAgainPlease/LICENCE.md)
+RunAgainPlease is licenced under the [MIT Licence](https://github.com/mikejturner/RunAgainPlease/LICENCE.md).
