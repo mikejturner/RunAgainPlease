@@ -1,7 +1,7 @@
 RunAgainPlease
 ==============
 
-**RunAgainPlease** is a commandline tool which automates the process of running a series of calculations whilst varying a set of parameters of your choice.
+**RunAgainPlease** is a command-line tool which automates the process of running a series of calculations whilst varying a set of parameters of your choice.
 
 ##Installation
 
@@ -14,7 +14,7 @@ chmod u+x rap
 ```
 ##Usage
 
-**rap** is run from the commandline and accepts one argument, a filename.
+**rap** is run from the command-line and accepts one argument, a filename.
 
 ```Console
 rap <filename>
