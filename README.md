@@ -339,7 +339,7 @@ To disable any **rap** instruction, simply add **#** at the beginning of the lin
 #@rap var length 0.2,0.25,0.3,0.35,0.4
 ```
 
-**rap** will no longer use the variable called `length`.
+**rap** will now ignore the variable called `length`.
 
 ## Issues
 
