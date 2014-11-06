@@ -1,7 +1,7 @@
 RunAgainPlease
 ==============
 
-**RunAgainPlease** is a commandline tool which automates the process of running a series of calculations whilst varying a set of parameters of your choice.
+**RunAgainPlease** is a command-line tool which automates the process of running a series of calculations whilst varying a set of parameters of your choice.
 
 ##Installation
 
@@ -14,17 +14,19 @@ chmod u+x rap
 ```
 ##Usage
 
-**rap** is run from the commandline and accepts one argument.
+**rap** is run from the command-line and accepts one argument, a filename.
 
 ```Console
 rap <filename>
 ```
 
-Example:
+**Example:**
 
 ```Console
 rap gaussian.rap
 ```
+
+The filename typically has a `.rap` extension.
 
 ## Structure of a `.rap` file
 
@@ -36,7 +38,7 @@ rap gaussian.rap
 
 The three sections are combined and put into a single `.rap` file. The [variables](#variables) and [script](#script) are specified by instructions to **rap** and must be prefixed with `@rap`. 
 
-Example:
+**Example:**
 
 ```
 @rap var length 0.2,0.25,0.3,0.35,0.4
@@ -79,7 +81,7 @@ Tokens are defined using [variable](#variables) names:
 @rap:<variable-name>
 ```
 
-Example:
+**Example:**
 
 ```
 @rap:length
@@ -87,7 +89,7 @@ Example:
 
 The token `@rap:length` will be replaced with the values of the variable `length`.
 
-There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted.
+There is no restriction on where tokens can appear in the template and if the same token appears more than once then all occurrences get substituted. An alternative use of variables is discussed [here](#using-variables-as-command-line-arguments).
 
 ### Variables
 
@@ -115,7 +117,7 @@ The variable-values part of the definition depends on what kind of variable you 
 
 Values in a list are comma-separated and can be text, numbers or a mixture.
 
-Example:
+**Example:**
 
 ```
 @rap var noise moo,oink,woof
@@ -123,7 +125,7 @@ Example:
 
 Here we are defining a variable called `noise` and will be given 3 values: `moo`, `oink` and `woof` when **rap** is run.
 
-Example:
+**Example:**
 
 ```
 @rap var x 0.2,0.25,0.3,0.35,0.4
@@ -141,7 +143,7 @@ This variable type provides a way to specify ranges of numbers. They provide a c
 
 Ranges can be use integers e.g. 1,2,3,... or real numbers e.g. 10.4,10.5,10.6,... as shown below.
 
-Example:
+**Example:**
 
 ```
 @rap var x 1:2:5
@@ -149,7 +151,7 @@ Example:
 
 Creates a variable `x` with the values `1`, `3`, `5`, `7` and `9`.
 
-Example:
+**Example:**
 
 ```
 @rap var y 0.0:1.1:5
@@ -177,7 +179,7 @@ This is the same as an standard [list variable](#lists) except each file is pref
 * Relative path e.g. `data/methane.xyz`
 * Or simply `methane.xyz` if this file is in the same directory that you will run **rap** in.
 
-Example:
+**Example:**
 
 ```
 @rap var molecule file:data/methane.xyz,file:data/water.xyz,file:data/carbondioxide.xyz
@@ -189,7 +191,7 @@ This substitutes the contents of the three files `data/methane.xyz`, `data/water
 
 If more than one variable is specified, **rap** will run calculations for all the unique combinations.
 
-Example:
+**Example:**
 
 ```
 @rap  var  A  x,y,z
@@ -228,7 +230,7 @@ Here are some steps that you make want your script to perform:
 
 All the variables you created with `@rap var` are available in the script.
 
-Example:
+**Example:**
 
 ```
 @rap var cutoff 1,2,3
@@ -237,13 +239,16 @@ Example:
 
 The variables `cutoff` and `element` can be accessed in the script using the parameters `$cutoff` and `$element` respectively.
 
-This is useful if you want to save the variables used in a calculation along will some output from the calculation ([Example](#printing-out-the-interesting-output)).
+Having the variables available in the script is particular useful in the following situations:
+
+* Using variables as [command line arguments](#using-variables-as-command-line-arguments)
+* Storing the results of the calculation with the variables that produced it ([example](#printing-out-the-interesting-output)).
 
 #### Filename-based Script Parameters
 
 When **rap** is about to run a calculation it substitutes the [variables](#variables) into the [template](#templates-and-substitutions) and stores the result in a file. The name of this file is assigned by **rap**  and is unique for each calculation. Information about the assigned filename is made available in three script parameters: `$rap_filename`, `$rap_basename` and `$rap_extension`.
 
-Example:
+**Example:**
 
 If the input filename is `5.inp` then,
 
@@ -259,43 +264,65 @@ Here are a few of situations when these parameters come in handy:
 * You need to rename the input filename to meet the criteria of the program running in the calculation.
 * You want to archive the input files.
 
+### Using Variables as Command-line Arguments
+
+As an alternative to [substituting variables](#templates-and-substitutions) into a template, the variables can also be used as command-line arguments.
+
+**Example:**
+
+```
+@rap script mkdir $molecule
+```
+
+This creates a new folder whose name is the value stored in the variable `molecule`.
+
 ### Example Script Commands
 
 To provide some inspiration for writing you own scripts, here are explanations of the script instructions used in the [example](#structure-of-a-rap-file) introduced earlier.
 
-#### Running the program
+**Example:**
 
 ```
 @rap script g09 < $rap_filename > $rap_basename.out
 ```
 
-#### Extracting interesting output
+This script instruction runs our calculation using `g09`. The input for the calculation comes from the file given by `$rap_filename` which we know is a [shell parameter](#filename-based-script-parameters) containing the filename in which **rap** stores the input. We construct a filename based on `$rap_basename` with the extension `.out` and store the output of the calculation in that file.
+
+**Example:**
 
 ```
 @rap script energy=`grep "SCF Done:" $rap_basename.out| token 5`
 ```
 
-#### Printing out the interesting output
+Here we are extracting a value from the file `$rap_basename.out` and storing it in a new shell parameter called `energy`. This is achieved by finding (using `grep`) the line in the output which contains the text `SCF Done:`.
+
+We only want the number that represents the energy so we use `token` to select the 5th "word" on the line.
+
+Later on when we want to access the energy parameter we must remember to refer to it as `$energy`.
+
+**Example:**
 
 ```
 @rap script echo $length,$energy
 ```
 
-[.csv file](http://en.wikipedia.org/wiki/Comma-separated_values) for reading into a spreadsheet.
+Here we are using the `echo` command to print out a comma-separated list of values that interest us (in this case the `length` and `energy` variables). This can be saved into a [.csv file](http://en.wikipedia.org/wiki/Comma-separated_values) and conveniently read into a spreadsheet program for graphing.
 
-
-#### Tidying up
+**Example:**
 
 ```
 @rap script rm $rap_basename.out
 ```
 
+Here we are using the `rm` command to remove the output files and keep things tidy.
+
 ## Gotchas and Advice
+
+Below is some helpful advice to help you avoid problems when running **rap**.
 
 ### Substitutions
 
-* If there is no instruction defining the variable with the name `length` in the `.rap` file then no substitution will take place i.e. the token will be simply ignored. This will probably break your calculation because the program performing the calculation will have no idea what `@rap:length` means.
-* Tokens are *not* substituted within included files
+* Don't use tokens inside files that you intend to subsitute into the template. **rap** does *not* perform variable substitution within these included files.
 * There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish. (See section on [multiple variables](#multiple-variables)).
 
 ### Naming Variables
@@ -308,13 +335,13 @@ To provide some inspiration for writing you own scripts, here are explanations o
 
 To disable any **rap** instruction, simply add **#** at the beginning of the line.
 
-Example:
+**Example:**
 
 ```
 #@rap var length 0.2,0.25,0.3,0.35,0.4
 ```
 
-**rap** will no longer use the variable called `length`.
+**rap** will now ignore the variable called `length`.
 
 ## Issues
 
@@ -328,4 +355,4 @@ https://github.com/mikejturner/RunAgainPlease/issues
 
 ## Licence
 
-[MIT Licence](https://github.com/mikejturner/RunAgainPlease/LICENCE.md)
+RunAgainPlease is licenced under the [MIT Licence](https://github.com/mikejturner/RunAgainPlease/LICENCE.md).
