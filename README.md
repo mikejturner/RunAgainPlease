@@ -318,9 +318,11 @@ Here we are using the `rm` command to remove the output files and keep things ti
 
 ## Gotchas and Advice
 
+Below is some helpful advice to help you avoid problems when running **rap**.
+
 ### Substitutions
 
-* Tokens are *not* substituted within included files
+* Don't use tokens inside files that you intend to subsitute into the template. **rap** does *not* perform variable substitution within these included files.
 * There is no limit on the number of variables you can define. However if you had 5 variables each taking 4 values that would result in 4^5 or 1024 calculations. Depending on how long each calculation takes you could be waiting a very long time for it to finish. (See section on [multiple variables](#multiple-variables)).
 
 ### Naming Variables
