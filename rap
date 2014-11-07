@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import sys
 from subprocess import call
@@ -101,14 +101,16 @@ def expand_range_string(string):
 		# Try and parse range as integers. If fail fall back to floats.
 		try:
 			start = int(tokens[0])
-			step = int(tokens[1])
-			n_values = int(tokens[2])
+			stop = int(tokens[1])
+			step = int(tokens[2])
 		except Exception, e:
 			start = float(tokens[0])
-			step = float(tokens[1])
-			n_values = int(tokens[2])
-		for i in range(0,n_values):
-			r.append(str(start+i*step))
+			stop = float(tokens[1])
+			step = float(tokens[2])
+		i = start
+		while (i < stop):
+			r.append(str(i))
+			i += step
 	else:
 		print "error: malformed range"
 	return r 
