@@ -138,15 +138,23 @@ Here we are defining a variable called `length` and will be given 5 values from 
 This variable type provides a way to specify ranges of numbers. They provide a convenient alternative to having to write out all the values when using lists. 
 
 ```
-@rap var <variable-name> <start-value>:<step-size>:<number-of-steps>
+@rap var <variable-name> <start-value>:<end-value>:<step-size>
 ```
 
-Ranges can be use integers e.g. 1,2,3,... or real numbers e.g. 10.4,10.5,10.6,... as shown below.
+Ranges can use integers e.g. 1,2,3,... or real numbers e.g. 10.4,10.5,10.6,... as shown in the examples below.
+
+For those with programming experience, range are equivalent to a `for` loop:
+
+```
+for (i = start-value; i < end-value; i = i + step-size) {
+}
+```
+
 
 **Example:**
 
 ```
-@rap var x 1:2:5
+@rap var x 1:10:2
 ```
 
 Creates a variable `x` with the values `1`, `3`, `5`, `7` and `9`.
@@ -154,16 +162,10 @@ Creates a variable `x` with the values `1`, `3`, `5`, `7` and `9`.
 **Example:**
 
 ```
-@rap var y 0.0:1.1:5
+@rap var y 0.0:6.0:1.1
 ```
 
 Creates a variable `y` with the values `0.0`, `1.1`, `2.2`, `3.3`, `4.4` and `5.5`.
-
-If you know you want the range to begin at `start` and stop at `end` with `number-of-steps` steps, then the `step-size` can be calculated with:
-
-```
-step-size = (end - start) / (number-of-steps - 1)
-```
 
 #### File Substitution
 
